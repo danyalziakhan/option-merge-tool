@@ -235,7 +235,7 @@ async def run(settings: Settings) -> None:
 
 
 def proceed_callback(sender: Any, app_data: Any, stateful: StatefulData):
-    JOIN_RULE = dpg.get_value(ElementTag.JOIN_BY)
+    join_by = dpg.get_value(ElementTag.JOIN_BY)
     output_column = cast(str, dpg.get_value(ElementTag.OUTPUT_COLUMN)).replace(
         "  ", "\n"
     )
@@ -248,7 +248,6 @@ def proceed_callback(sender: Any, app_data: Any, stateful: StatefulData):
     print(f"{first_column = }")
     print(f"{second_column = }")
     print(f"{output_column = }")
-    start_rule: str = JOIN_RULE
 
     stateful.dataframe = read_excel(stateful.configuration.input_file)
     merge(
@@ -257,7 +256,7 @@ def proceed_callback(sender: Any, app_data: Any, stateful: StatefulData):
         output_column,
         first_column,
         second_column,
-        start_rule,
+        join_by,
         stateful.configuration.column_to_dropna,
         stateful.configuration.columns_to_drop_dulicates,
     )
