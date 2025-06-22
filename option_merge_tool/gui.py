@@ -37,14 +37,14 @@ class Configuration:
 
 
 class ElementTag(IntEnum):
-    output_column = auto()
-    first_column = auto()
-    second_column = auto()
-    join_by = auto()
-    selected_data_file = auto()
-    data_file_dialog = auto()
-    selected_template_file = auto()
-    template_file_dialog = auto()
+    OUTPUT_COLUMN = auto()
+    FIRST_COLUMN = auto()
+    SECOND_COLUMN = auto()
+    JOIN_BY = auto()
+    SELECTED_DATA_FILE = auto()
+    DATA_FILE_DIALOG = auto()
+    SELECTED_TEMPLATE_FILE = auto()
+    TEMPLATE_FILE_DIALOG = auto()
 
 
 # ? Attributes of SplitOptions that we want to pass around DearPyGUI elements
@@ -61,7 +61,7 @@ class SplitOptions:
     def input_file_selected(self, sender: str, app_data: dict[str, dict[str, str]]):
         print("Selecting")
         dpg.set_value(
-            ElementTag.selected_data_file,
+            ElementTag.SELECTED_DATA_FILE,
             list(app_data["selections"].values())[0],
         )
         self.configuration.input_file = list(app_data["selections"].values())[0]
@@ -71,7 +71,7 @@ class SplitOptions:
     def template_file_selected(self, sender: str, app_data: dict[str, dict[str, str]]):
         print("Selecting")
         dpg.set_value(
-            ElementTag.selected_template_file,
+            ElementTag.SELECTED_TEMPLATE_FILE,
             list(app_data["selections"].values())[0],
         )
         self.configuration.template_file = list(app_data["selections"].values())[0]
@@ -88,7 +88,7 @@ class SplitOptions:
             directory_selector=False,
             show=False,
             callback=self.input_file_selected,
-            tag=ElementTag.data_file_dialog,
+            tag=ElementTag.DATA_FILE_DIALOG,
             height=500,
             width=700,
         ):
@@ -97,10 +97,10 @@ class SplitOptions:
 
         dpg.add_button(
             label="Choose the input data file",
-            callback=lambda: dpg.show_item(ElementTag.data_file_dialog),
+            callback=lambda: dpg.show_item(ElementTag.DATA_FILE_DIALOG),
         )
         dpg.add_text(
-            tag=ElementTag.selected_data_file,
+            tag=ElementTag.SELECTED_DATA_FILE,
             default_value=self.configuration.input_file,
             color=(255, 0, 0, 255),
         )
@@ -110,7 +110,7 @@ class SplitOptions:
             directory_selector=False,
             show=False,
             callback=self.template_file_selected,
-            tag=ElementTag.template_file_dialog,
+            tag=ElementTag.TEMPLATE_FILE_DIALOG,
             height=500,
             width=700,
         ):
@@ -119,10 +119,10 @@ class SplitOptions:
 
         dpg.add_button(
             label="Choose the template data file",
-            callback=lambda: dpg.show_item(ElementTag.template_file_dialog),
+            callback=lambda: dpg.show_item(ElementTag.TEMPLATE_FILE_DIALOG),
         )
         dpg.add_text(
-            tag=ElementTag.selected_template_file,
+            tag=ElementTag.SELECTED_TEMPLATE_FILE,
             default_value=self.configuration.template_file,
             color=(255, 0, 0, 255),
         )
@@ -135,7 +135,7 @@ class SplitOptions:
             dpg.add_combo(
                 items=[c.replace("\n", "  ") for c in columns],
                 default_value=self.configuration.first_column.replace("\n", "  "),
-                tag=ElementTag.first_column,
+                tag=ElementTag.FIRST_COLUMN,
             )
 
             default = self.configuration.second_column.replace("\n", "  ")
@@ -143,7 +143,7 @@ class SplitOptions:
             dpg.add_combo(
                 items=[c.replace("\n", "  ") for c in columns],
                 default_value=self.configuration.second_column.replace("\n", "  "),
-                tag=ElementTag.second_column,
+                tag=ElementTag.SECOND_COLUMN,
             )
 
             default = self.configuration.output_column.replace("\n", "  ")
@@ -151,14 +151,14 @@ class SplitOptions:
             dpg.add_combo(
                 items=[c.replace("\n", "  ") for c in columns],
                 default_value=self.configuration.output_column.replace("\n", "  "),
-                tag=ElementTag.output_column,
+                tag=ElementTag.OUTPUT_COLUMN,
             )
 
         with dpg.group(width=800):
             dpg.add_text(f"Join by [DEFAULT: {self.configuration.join_by}]")
             dpg.add_input_text(
                 default_value=self.configuration.join_by,
-                tag=ElementTag.join_by,
+                tag=ElementTag.JOIN_BY,
             )
 
         dpg.add_button(
@@ -235,14 +235,14 @@ async def run(settings: Settings) -> None:
 
 
 def proceed_callback(sender: Any, app_data: Any, stateful: StatefulData):
-    JOIN_RULE = dpg.get_value(ElementTag.join_by)
-    output_column = cast(str, dpg.get_value(ElementTag.output_column)).replace(
+    JOIN_RULE = dpg.get_value(ElementTag.JOIN_BY)
+    output_column = cast(str, dpg.get_value(ElementTag.OUTPUT_COLUMN)).replace(
         "  ", "\n"
     )
-    first_column = cast(str, dpg.get_value(ElementTag.first_column)).replace(
+    first_column = cast(str, dpg.get_value(ElementTag.FIRST_COLUMN)).replace(
         r"  ", "\n"
     )
-    second_column = cast(str, dpg.get_value(ElementTag.second_column)).replace(
+    second_column = cast(str, dpg.get_value(ElementTag.SECOND_COLUMN)).replace(
         r"  ", "\n"
     )
     print(f"{first_column = }")
